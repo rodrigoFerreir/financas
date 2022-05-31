@@ -7,6 +7,7 @@ class AccountModel(BaseModel):
     """
     Classe responsavel pela criação de contas(receitas e despesas dos usuarios)
     """
+    title: str = Field(...)
     description: str = Field(...)
     value: float = Field(...)
     category: str = Field(...)
@@ -16,6 +17,7 @@ class AccountModel(BaseModel):
     class Config:
         schema_extra = {
             "account": {
+                "title": "Titulo da conta",
                 "description": "exemplo de conta",
                 "value": "300.96",
                 "category": "Gastos Gerais/Alimentação/Restaurante/Agua/Luz",

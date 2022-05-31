@@ -20,14 +20,14 @@ account_collection = database.get_collection('user')
 def account_helper(account) -> dict:
    return {
        "_id":str(account["_id"]),
-       "name":str(account["name"]),
-       "email":str(account["email"]),
-       "password":str(account["password"]),
-       "avatar":str(account["avatar"]),
+       "title":str(account["title"]),
+       "description":str(account["description"]),
+       "value":float(account["value"]),
+       "category":str(account["category"]),
+       "type_account":str(account["type_account"]),
    } 
 
 async def save_account(account: AccountModel)-> dict:
-    account.password = generate_hash_password(account.password)
     new_account = await account_collection.insert_one(account.__dict__)
 
     get_new_account =  await account_collection.find_one({"_id":new_account.inserted_id})
@@ -40,8 +40,8 @@ async def list_all_accounts():
     return accounts
 
 
-async def list_account_from_email(email:str) -> dict:
-    account = await account_collection.find_one({"email":email})
+async def list_account_from_id(id:str) -> dict:
+    account = await account_collection.find_one({"_id":id})
     if account:
         return account_helper(account)
     else:

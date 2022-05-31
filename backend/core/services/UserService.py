@@ -1,5 +1,4 @@
 
-from email.policy import default
 from serializers.UserSerializer import UserIn
 from repositories.UserRepository import (
     list_user_from_id,
