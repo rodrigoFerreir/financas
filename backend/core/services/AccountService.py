@@ -54,3 +54,22 @@ async def update_account_by_id(id: str, account: AccountModel):
             return {"msg": f"Nenhum lançamento encontrado", "dados": "", "status": 404}
     except Exception as error:
         return {"msg": "Erro interno no servidor!", "dados": str(error), "status": 500}
+
+
+async def delete_account_by_id(id: str):
+    try:
+        account = await delete_account(id=id)
+        if account:
+            return {
+                "msg": f"Lançamento deletado",
+                "dados": True,
+                "status": 200,
+            }
+        else:
+            return {
+                "msg": f"Nenhum lançamento encontrado",
+                "dados": False,
+                "status": 404,
+            }
+    except Exception as error:
+        return {"msg": "Erro interno no servidor!", "dados": str(error), "status": 500}

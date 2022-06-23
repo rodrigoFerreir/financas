@@ -6,6 +6,7 @@ from services.AccountService import (
     get_all_account,
     get_account_by_id,
     update_account_by_id,
+    delete_account_by_id,
 )
 
 router = APIRouter()
@@ -80,6 +81,27 @@ async def get_account(account_id: str):
 async def updated_account(account_id: str, account: AccountUpdate = Body(...)):
     try:
         result_account = await update_account_by_id(id=account_id, account=account)
+
+        if not result_account["status"] == 200:
+            raise HTTPException(
+                status_code=result_account["status"], detail=result_account["msg"]
+            )
+
+        return result_account
+
+    except Exception as error:
+        print(error)
+        raise HTTPException(status_code=500)
+
+
+@router.delete(
+    "/delete/{account_id}",
+    response_description="Rota para deletar dados de um Lançamento",
+    dependencies=[Depends(verify_token)],
+)
+async def deleted_account(account_id: str):
+    try:
+        result_account = await delete_account_by_id(id=account_id)
 
         if not result_account["status"] == 200:
             raise HTTPException(

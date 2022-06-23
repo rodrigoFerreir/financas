@@ -91,4 +91,4 @@ async def delete_account(id: str):
     account = await account_collection.find_one({"_id": ObjectId(id)})
 
     if account:
-        await account_collection.delete_one({"_id": ObjectId(id)})
+        return await account_collection.delete_one({"_id": ObjectId(id)})
