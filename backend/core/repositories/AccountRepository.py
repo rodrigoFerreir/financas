@@ -2,7 +2,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 
 from decouple import config
-from utils.AuthUtil import generate_hash_password
 from models import AccountModel
 
 
@@ -14,7 +13,7 @@ client_db = AsyncIOMotorClient(MONGO_DB_URL)
 
 database = client_db.financas
 
-account_collection = database.get_collection('user')
+account_collection = database.get_collection('account')
 
 
 def account_helper(account) -> dict:
@@ -24,7 +23,7 @@ def account_helper(account) -> dict:
        "description":str(account["description"]),
        "value":float(account["value"]),
        "category":str(account["category"]),
-       "type_account":str(account["type_account"]),
+       "type_account":str(account["type_account"])
    } 
 
 async def save_account(account: AccountModel)-> dict:
@@ -36,12 +35,23 @@ async def save_account(account: AccountModel)-> dict:
 
 
 async def list_all_accounts():
-    accounts = await account_collection.find()
-    return accounts
+    accounts =  account_collection.aggregate([{
+        "$lookup": {
+            "from": "user",
+            "localField": "user_id",
+            "foreignField": "_id",
+            "as": "user"
+        }
+    }])
+    all_accounts = []
 
+    async for account in accounts:
+        all_accounts.append(account_helper(account))
+
+    return all_accounts
 
 async def list_account_from_id(id:str) -> dict:
-    account = await account_collection.find_one({"_id":id})
+    account = await account_collection.find_one({"_id": ObjectId(id)})
     if account:
         return account_helper(account)
     else:
