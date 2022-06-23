@@ -7,6 +7,7 @@ class AccountModel(BaseModel):
     """
     Classe responsavel pela criação de contas(receitas e despesas dos usuarios)
     """
+
     title: str = Field(...)
     description: str = Field(...)
     value: float = Field(...)
@@ -22,6 +23,6 @@ class AccountModel(BaseModel):
                 "value": "300.96",
                 "category": "Gastos Gerais/Alimentação/Restaurante/Agua/Luz",
                 "type_account": "receita/despesa",
-                "create_at": "dd-mm-YY"
+                "create_at": "dd-mm-YY",
             }
         }

@@ -7,6 +7,7 @@ class UserModel(BaseModel):
     """
     Classe que reprensenta um usuario
     """
+
     name: str = Field(...)
     email: EmailStr = Field(...)
     password: str = Field(...)
@@ -21,6 +22,6 @@ class UserModel(BaseModel):
                 "email": "teste@exemple.com",
                 "password": "dajskdj.fsajfsa0qwdksa",
                 "avatar": "image.png",
-                "create_at": "dd-mm-YY"
+                "create_at": "dd-mm-YY",
             }
         }
