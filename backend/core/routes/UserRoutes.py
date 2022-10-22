@@ -1,21 +1,18 @@
 from fastapi import APIRouter, Body, HTTPException, Depends, Header
-from middlewares.AuthMiddleware import verify_token
+from middlewares.AuthMiddleware import AuthMiddleware
 from serializers.UserSerializer import UserIn, UserOut
-from services.UserService import (
-    create_new_user,
-    list_from_id,
-    list_all_users,
-    update_user,
-    delete_user,
-)
-from services.AuthService import decode_jwt_token
+from services.UserService import UserService
+from services.AuthService import AuthService
 
 router = APIRouter()
+user_service = UserService()
+auth_service = AuthService()
+middleware = AuthMiddleware()
 
 
 @router.post("/create", response_description="Rota para criar um novo Usuario")
 async def new_user(user: UserIn = Body(...)):
-    result_user = await create_new_user(user)
+    result_user = await user_service.create_new_user(user)
 
     if not result_user["status"] == 201:
         raise HTTPException(
@@ -28,15 +25,14 @@ async def new_user(user: UserIn = Body(...)):
 @router.get(
     "/me",
     response_description="Rota para buscar um Usuario logado",
-    dependencies=[Depends(verify_token)],
+    dependencies=[Depends(middleware.verify_token)],
 )
 async def get_info_user_logged(Authorization: str = Header(default="")):
     try:
         token = Authorization.split(" ")[1]
-        payload = decode_jwt_token(token)
+        payload = auth_service.decode_jwt_token(token)
 
-        user = await list_from_id(payload["user_id"])
-
+        user = await user_service.list_from_id(id=payload["user_id"])
         if not user["status"] == 200:
             raise HTTPException(status_code=user["status"], detail=user["msg"])
         return user

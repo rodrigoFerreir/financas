@@ -1,6 +1,8 @@
 from datetime import datetime
-
+from typing import Optional
 from pydantic import BaseModel, Field
+from .UserModel import UserModel
+from .AccountPlanningModel import AccountPlanningModel
 
 
 class AccountModel(BaseModel):
@@ -13,6 +15,8 @@ class AccountModel(BaseModel):
     value: float = Field(...)
     category: str = Field(...)
     type_account: str = Field(...)
+    user = Optional[UserModel]
+    planning = Optional[AccountPlanningModel]
     create_at: datetime = Field(default_factory=datetime.now)
 
     class Config:
@@ -23,6 +27,8 @@ class AccountModel(BaseModel):
                 "value": "300.96",
                 "category": "Gastos Gerais/Alimentação/Restaurante/Agua/Luz",
                 "type_account": "receita/despesa",
+                "user": "id do usuario",
+                "planning": "Tipo de conta Fixa/Geral/Aluguel",
                 "create_at": "dd-mm-YY",
             }
         }

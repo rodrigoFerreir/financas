@@ -1,5 +1,5 @@
 from datetime import datetime
-from models.UserModel import UserModel
+
 from pydantic import BaseModel
 
 
